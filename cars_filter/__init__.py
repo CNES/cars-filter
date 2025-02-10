@@ -24,7 +24,6 @@ Top-level package for cars-filter.
 
 from importlib.metadata import version
 
-# version through setuptools_scm when python3 > 3.8
 try:
     __version__ = version("cars_filter")
 except Exception:  # pylint: disable=broad-except
