@@ -6,6 +6,10 @@
 
  - Add wheels in PyPI package for Windows, MacOS and Ubuntu
 
+### Changed
+
+ - Support for Python 3.8 is over
+
 ## 0.1.0 First Official Release (November 2024)
 
 - First open-source release
