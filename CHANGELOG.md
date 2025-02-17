@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.1 Cross-platforms wheels
+## 0.1.1 Cross-platforms wheels (February 2025)
 
 ### Added
 
