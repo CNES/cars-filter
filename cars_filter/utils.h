@@ -79,29 +79,41 @@ inline double squared_euclidian_distance(const PointType& point1,
 template<typename T>
 std::tuple<T, T, T> compute_approximate_quantiles(std::vector<T> input_data)
 {
-  unsigned int size = input_data.size();
+
+  // clean list
+  std::vector<T> cleaned_data;
+  for (const T& value : input_data) {
+      if (!std::isnan(value)) {
+          cleaned_data.push_back(value);
+      }
+  }
+  unsigned int size = cleaned_data.size();
   unsigned int first_quarter_pos = static_cast<unsigned int>(size/4);
   unsigned int half_pos = static_cast<unsigned int>(size/2);
   unsigned int third_quarter_pos = first_quarter_pos + half_pos;
 
+  if (size == 0) {
+        return {std::nan(""), std::nan(""), std::nan("")};
+  }
+
   // Split the container at the median
-  std::nth_element(input_data.begin(),
-                   input_data.begin() + half_pos,
-                   input_data.end());
+  std::nth_element(cleaned_data.begin(),
+                   cleaned_data.begin() + half_pos,
+                   cleaned_data.end());
 
   // Split the first half of the container at the 0.25 quantile
-  std::nth_element(input_data.begin(),
-                   input_data.begin() + first_quarter_pos,
-                   input_data.begin() + half_pos);
+  std::nth_element(cleaned_data.begin(),
+                   cleaned_data.begin() + first_quarter_pos,
+                   cleaned_data.begin() + half_pos);
 
   // Split the other half of the container at the 0.75 quantile
-  std::nth_element(input_data.begin() + half_pos+1,
-                   input_data.begin() + third_quarter_pos,
-                   input_data.end());
+  std::nth_element(cleaned_data.begin() + half_pos+1,
+                   cleaned_data.begin() + third_quarter_pos,
+                   cleaned_data.end());
 
-  return {input_data[first_quarter_pos],
-          input_data[half_pos],
-          input_data[third_quarter_pos]};
+  return {cleaned_data[first_quarter_pos],
+          cleaned_data[half_pos],
+          cleaned_data[third_quarter_pos]};
 }
 
 
