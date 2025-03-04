@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.2 Statistical filter bug fix (March 2025)
+
+### Fixed
+
+- Robustify percentile utilisation to nan points.
+
 ## 0.1.1 Cross-platforms wheels (February 2025)
 
 ### Added
