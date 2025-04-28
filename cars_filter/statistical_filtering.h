@@ -31,6 +31,8 @@ namespace cars_filter
 * \param y_coords array containing the y triangulated coordinates
 * \param z_coords array containing the altitudes
 * \param num_elem number of points in the cloud
+* \param filtering_constant constant added to the distance threshold distance threshold
+* \param mean_factor ratio applied to mean or median distance in distance threshold
 * \param dev_factor ratio applied to stddev or interquartile distance in distance threshold
 * \param k number of neighbors in the KNN algorithm
 * \param use_median Use median+interquartile distance (true) or mean+stddev (false) to compute distance threshold
@@ -40,6 +42,8 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
                                                 double* y_coords,
                                                 double* z_coords,
                                                 const unsigned int num_elem,
+                                                const double filtering_constant = 0,
+                                                const double mean_factor = 1,
                                                 const double dev_factor = 1.,
                                                 const unsigned int k = 50,
                                                 const bool use_median = false);
@@ -54,6 +58,8 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
 * \param outlier_array output outlier mask (true = outlier)
 * \param k number of neighbors in the KNN algorithm
 * \param half window size half size of the epipolar search window (in rows and columns)
+* \param filtering_constant constant added to the distance threshold distance threshold
+* \param mean_factor ratio applied to mean or median distance in distance threshold
 * \param dev_factor ratio applied to stddev or interquartile distance in distance threshold
 * \param use_median Use median+interquartile distance (true) or mean+stddev (false) to compute distance threshold
 *
@@ -64,7 +70,10 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
                                     Image<double>& outlier_array,
                                     const unsigned int k = 50,
                                     const unsigned int half_window_size = 15,
+                                    const double filtering_constant = 0,
+                                    const double mean_factor = 1,
                                     const double dev_factor = 1,
                                     const double use_median = false);
+
 
 } // namespace cars_filter
