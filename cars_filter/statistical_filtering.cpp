@@ -23,6 +23,8 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
                                                 double* y_coords,
                                                 double* z_coords,
                                                 const unsigned int num_elem,
+                                                const double filtering_constant,
+                                                const double mean_factor,
                                                 const double dev_factor,
                                                 const unsigned int k,
                                                 const bool use_median)
@@ -75,7 +77,7 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
   {
     auto [percentile_25, median, percentile_75] = compute_approximate_quantiles(mean_distances);
     double interquartile_distance = percentile_75 - percentile_25;
-    dist_thresh = median + dev_factor * interquartile_distance;
+    dist_thresh = filtering_constant + mean_factor * median + dev_factor * interquartile_distance;
   }
   else
   {
@@ -89,8 +91,7 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
 
     const double var = std::accumulate(mean_distances.begin(), mean_distances.end(), 0.0, variance_lambda)/num_elem;
     const double stddev = std::sqrt(var);
-
-    dist_thresh = mean + dev_factor * stddev;
+    dist_thresh = filtering_constant + mean_factor * mean + dev_factor * stddev;
   }
 
   std::vector<unsigned int> result;
@@ -114,6 +115,8 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
                                     Image<double>& outlier_array,
                                     const unsigned int k,
                                     const unsigned int half_window_size,
+                                    const double filtering_constant,
+                                    const double mean_factor,
                                     const double dev_factor,
                                     const double use_median)
 {
@@ -139,8 +142,8 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
                 [](double elem){return !std::isnan(elem);});
     auto [percentile_25, median, percentile_75] = compute_approximate_quantiles(mean_distances_no_nan);
     double interquartile_distance = percentile_75 - percentile_25;
-
-    distance_threshold = median + dev_factor * interquartile_distance;
+;
+    distance_threshold = filtering_constant + mean_factor * median + dev_factor * interquartile_distance;
   }
   else
   {
@@ -181,7 +184,7 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
                                        variance_lambda) / num_valid;
     const double stddev = std::sqrt(var);
 
-    distance_threshold = mean + dev_factor * stddev;
+    distance_threshold = filtering_constant + mean_factor * mean + dev_factor * stddev;
   }
 
   for (unsigned int row=0; row < x_coords.number_of_rows(); row++)

@@ -40,6 +40,8 @@ py::array_t<double, py::array::c_style> pyEpipolarStatisticalOutlierFiltering(
         py::array_t<double, py::array::c_style>& z_values,
         const unsigned int k,
         const unsigned int half_window_size,
+        const double filtering_constant,
+        const double mean_factor,
         const double dev_factor,
         const double use_median
 )
@@ -54,7 +56,16 @@ py::array_t<double, py::array::c_style> pyEpipolarStatisticalOutlierFiltering(
                                                         {x_image.number_of_cols() * sizeof(double),  sizeof(double)});
   auto outlier_image = pyarray_to_image<double>(outlier_array);
 
-  epipolar_statistical_filtering(x_image, y_image, z_image, outlier_image, k, half_window_size, dev_factor, use_median);
+  epipolar_statistical_filtering(x_image,
+                                 y_image,
+                                 z_image,
+                                 outlier_image,
+                                 k,
+                                 half_window_size,
+                                 filtering_constant,
+                                 mean_factor,
+                                 dev_factor,
+                                 use_median);
 
   return outlier_array;
 }
@@ -92,6 +103,8 @@ py::array_t<double, py::array::c_style> pyEpipolarSmallComponentOutlierFiltering
 py::list pyPointCloudStatisticalOutlierFiltering(py::array_t<double, py::array::c_style> x_array,
                                                  py::array_t<double, py::array::c_style> y_array,
                                                  py::array_t<double, py::array::c_style> z_array,
+                                                 const double filtering_constant,
+                                                 const double mean_factor,
                                                  const double dev_factor,
                                                  const unsigned int k,
                                                  const bool use_median)
@@ -106,7 +119,7 @@ py::list pyPointCloudStatisticalOutlierFiltering(py::array_t<double, py::array::
   py::buffer_info z_info = z_array.request();
   auto z_coords = static_cast<double *>(z_info.ptr);
 
-  auto result = cars_filter::statistical_filtering(x_coords, y_coords, z_coords, x_info.shape[0], dev_factor, k, use_median);
+  auto result = cars_filter::statistical_filtering(x_coords, y_coords, z_coords, x_info.shape[0], filtering_constant, mean_factor, dev_factor, k, use_median);
 
   // Copy C++ vector to Python list
   // As result has variable length, I am not sure if the copy can be avoided here in pyBind
@@ -170,6 +183,8 @@ PYBIND11_MODULE(outlier_filter, m)
         py::arg("x_array"),
         py::arg("y_array"),
         py::arg("z_array"),
+        py::arg("filtering_constant") = 0.,
+        py::arg("mean_factor") = 1.,
         py::arg("dev_factor") = 1.,
         py::arg("k") = 15,
         py::arg("use_median") = false
@@ -196,6 +211,8 @@ PYBIND11_MODULE(outlier_filter, m)
         py::arg("z_values"),
         py::arg("k") = 15,
         py::arg("half_window_size") = 10,
+        py::arg("filtering_constant") = 0.,
+        py::arg("mean_factor") = 1.,
         py::arg("dev_factor") = 1.,
         py::arg("use_median") = false,
         py::return_value_policy::take_ownership
