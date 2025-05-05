@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 Additional statistical filtering parameters (May 2025)
+
+### Added
+
+- New parameters `filtering_constant` and `mean_factor` in cars statistical filtering functions:
+
+`threshold = filtering_constant + mean_factor * mean + dev_factor * std_dev`
+
 ## 0.1.2 Statistical filter bug fix (March 2025)
 
 ### Fixed
