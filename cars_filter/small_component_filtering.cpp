@@ -148,7 +148,7 @@ std::vector<unsigned int> point_cloud_small_component_filtering(
   return result;
 }
 
-void epipolar_small_component_filtering(
+std::vector<std::pair<unsigned int, unsigned int>> epipolar_small_component_filtering(
     Image<double>& x_coords,
     Image<double>& y_coords,
     Image<double>& z_coords,
@@ -161,6 +161,8 @@ void epipolar_small_component_filtering(
   InMemoryImage<double> visited_pixels(x_coords.number_of_rows(), x_coords.number_of_cols());
 
   std::vector<std::pair<unsigned int, unsigned int>> clusters;
+  std::vector<std::pair<unsigned int, unsigned int>> result;
+
 
   // outlier_array initialization
   for (unsigned int row=0; row < x_coords.number_of_rows(); row++)
@@ -214,10 +216,7 @@ void epipolar_small_component_filtering(
         {
           for (const auto& [elem_row, elem_col]:current_cluster)
           {
-            outlier_array.get(elem_row, elem_col) = 1;
-            x_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
-            y_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
-            z_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
+            result.emplace_back(elem_row, elem_col);
           }
         }
         else
@@ -244,16 +243,14 @@ void epipolar_small_component_filtering(
           {
             for (const auto& [elem_row, elem_col]:current_cluster)
             {
-              outlier_array.get(elem_row, elem_col) = 1;
-              x_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
-              y_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
-              z_coords.get(elem_row, elem_col) = std::numeric_limits<double>::quiet_NaN();
+                result.emplace_back(elem_row, elem_col);
             }
           }
         }
       }
     }
   }
+  return result;
 }
 
 }

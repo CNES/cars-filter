@@ -64,7 +64,7 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
 * \param use_median Use median+interquartile distance (true) or mean+stddev (false) to compute distance threshold
 *
 */
-void epipolar_statistical_filtering(Image<double>& x_coords,
+std::vector<std::pair<unsigned int, unsigned int>> epipolar_statistical_filtering(Image<double>& x_coords,
                                     Image<double>& y_coords,
                                     Image<double>& z_coords,
                                     Image<double>& outlier_array,

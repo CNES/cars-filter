@@ -109,7 +109,7 @@ std::vector<unsigned int> statistical_filtering(double* x_coords,
 }
 
 
-void epipolar_statistical_filtering(Image<double>& x_coords,
+std::vector<std::pair<unsigned int, unsigned int>> epipolar_statistical_filtering(Image<double>& x_coords,
                                     Image<double>& y_coords,
                                     Image<double>& z_coords,
                                     Image<double>& outlier_array,
@@ -121,6 +121,8 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
                                     const double use_median)
 {
   InMemoryImage<double> mean_distance_image(x_coords.number_of_rows(), x_coords.number_of_cols());
+  std::vector<std::pair<unsigned int, unsigned int>> result;
+
 
   for (unsigned int row=0; row < x_coords.number_of_rows(); row++)
   {
@@ -193,17 +195,11 @@ void epipolar_statistical_filtering(Image<double>& x_coords,
     {
       if (mean_distance_image.get(row, col) > distance_threshold)
       {
-        outlier_array.get(row, col) = true;
-        x_coords.get(row, col) = std::numeric_limits<double>::quiet_NaN();
-        y_coords.get(row, col) = std::numeric_limits<double>::quiet_NaN();
-        z_coords.get(row, col) = std::numeric_limits<double>::quiet_NaN();
-      }
-      else
-      {
-        outlier_array.get(row, col) = false;
+        result.emplace_back(row, col);
       }
     }
   }
+  return result;
 }
 
 } // namespace cars_filter

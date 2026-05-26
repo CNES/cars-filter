@@ -34,7 +34,7 @@ cars_filter::Image<T> pyarray_to_image(py::array_t<T> input_array)
 }
 
 
-py::array_t<double, py::array::c_style> pyEpipolarStatisticalOutlierFiltering(
+py::list pyEpipolarStatisticalOutlierFiltering(
         py::array_t<double, py::array::c_style>& x_values,
         py::array_t<double, py::array::c_style>& y_values,
         py::array_t<double, py::array::c_style>& z_values,
@@ -56,7 +56,7 @@ py::array_t<double, py::array::c_style> pyEpipolarStatisticalOutlierFiltering(
                                                         {x_image.number_of_cols() * sizeof(double),  sizeof(double)});
   auto outlier_image = pyarray_to_image<double>(outlier_array);
 
-  epipolar_statistical_filtering(x_image,
+  auto result = epipolar_statistical_filtering(x_image,
                                  y_image,
                                  z_image,
                                  outlier_image,
@@ -67,12 +67,12 @@ py::array_t<double, py::array::c_style> pyEpipolarStatisticalOutlierFiltering(
                                  dev_factor,
                                  use_median);
 
-  return outlier_array;
+  return py::cast(result);
 }
 
 
 
-py::array_t<double, py::array::c_style> pyEpipolarSmallComponentOutlierFiltering(
+py::list pyEpipolarSmallComponentOutlierFiltering(
         py::array_t<double, py::array::c_style>& x_values,
         py::array_t<double, py::array::c_style>& y_values,
         py::array_t<double, py::array::c_style>& z_values,
@@ -92,9 +92,9 @@ py::array_t<double, py::array::c_style> pyEpipolarSmallComponentOutlierFiltering
                                                         {x_image.number_of_cols() * sizeof(double),  sizeof(double)});
   auto outlier_image = pyarray_to_image<double>(outlier_array);
 
-  epipolar_small_component_filtering(x_image, y_image, z_image, outlier_image, min_cluster_size, radius, half_window_size, clusters_distance_threshold);
+  auto result = epipolar_small_component_filtering(x_image, y_image, z_image, outlier_image, min_cluster_size, radius, half_window_size, clusters_distance_threshold);
 
-  return outlier_array;
+  return py::cast(result);
 }
 
 
