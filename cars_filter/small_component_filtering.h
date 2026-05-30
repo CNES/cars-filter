@@ -62,7 +62,7 @@ std::vector<unsigned int> point_cloud_small_component_filtering(
 * \param clusters_distance_threshold a cluster will not be removed if it has a neighbor within this distance
 *
 */
-void epipolar_small_component_filtering(
+std::vector<std::pair<unsigned int, unsigned int>> epipolar_small_component_filtering(
     Image<double>& x_coords,
     Image<double>& y_coords,
     Image<double>& z_coords,
