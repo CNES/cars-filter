@@ -1,10 +1,16 @@
 # Changelog
 
+## 0.3.0 API output change (June 2026)
+
+### Changed
+
+ - Filtered points are not removed inside cars-filter but index of filtered points are returned
+
 ## 0.2.0 Additional statistical filtering parameters (May 2025)
 
 ### Added
 
-- New parameters `filtering_constant` and `mean_factor` in cars statistical filtering functions:
+ - New parameters `filtering_constant` and `mean_factor` in cars statistical filtering functions:
 
 `threshold = filtering_constant + mean_factor * mean + dev_factor * std_dev`
 
@@ -12,7 +18,7 @@
 
 ### Fixed
 
-- Robustify percentile utilisation to nan points.
+ - Robustify percentile utilisation to nan points.
 
 ## 0.1.1 Cross-platforms wheels (February 2025)
 
